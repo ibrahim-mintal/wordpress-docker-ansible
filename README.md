@@ -82,8 +82,8 @@ ansible-playbook -i inventory.ini parameterized_playbook
 
 ## 🌍 Access Services
 
-- **WordPress:** http://localhost:8081  
-- **phpMyAdmin:** http://localhost:8080  
+- **WordPress:** http://<remote_node_ip>:8081  
+- **phpMyAdmin:** http://<remote_node_ip>:8080  
 
 ---
 
