@@ -1,0 +1,51 @@
+- name: Deploy WordPress Stack
+  hosts: all
+  become: true
+  vars_files:
+    - ../vars/app.yml
+
+  tasks:
+    - name: Create Docker network
+      community.docker.docker_network:
+        name: "{{ db_network }}"
+
+    - name: Deploy MySQL DB
+      community.docker.docker_container:
+        name: "{{ db_name }}"
+        image: "{{ db_image }}"
+        networks:
+          - name: "{{ db_network }}"
+        ports: "{{ db_ports }}"
+        env:
+          MYSQL_ROOT_PASSWORD: "{{ db_root_password }}"
+          MYSQL_DATABASE: "{{ db_database }}"
+          MYSQL_USER: "{{ db_user }}"
+          MYSQL_PASSWORD: "{{ db_password }}"
+        volumes:
+          - "{{ db_volume }}"
+
+    - name: Deploy phpMyAdmin
+      community.docker.docker_container:
+        name: "{{ pma_name }}"
+        image: "{{ pma_image }}"
+        networks:
+          - name: "{{ db_network }}"
+        ports: "{{ pma_ports }}"
+        env:
+          PMA_HOST: "{{ db_name }}"
+          MYSQL_ROOT_PASSWORD: "{{ db_root_password }}"
+
+    - name: Deploy WordPress
+      community.docker.docker_container:
+        name: "{{ wp_name }}"
+        image: "{{ wp_image }}"
+        networks:
+          - name: "{{ db_network }}"
+        ports: "{{ wp_ports }}"
+        env:
+          WORDPRESS_DB_HOST: "{{ db_name }}:3306"
+          WORDPRESS_DB_USER: "{{ db_user }}"
+          WORDPRESS_DB_PASSWORD: "{{ db_password }}"
+          WORDPRESS_DB_NAME: "{{ db_database }}"
+        volumes:
+          - "{{ wp_volume }}"

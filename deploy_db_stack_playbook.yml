@@ -1,0 +1,32 @@
+---
+- name: Deply Stack
+  hosts: debian
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: create custom network
+      community.docker.docker_network:
+        name: db_net
+    - name: Deploy DB
+      community.docker.docker_container:
+        name: db
+        image: mysql
+        networks:
+          - name: db_net
+        ports:
+          - "3306:3306"
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        volumes:
+          - "my_vol:/var/lib/mysql"
+
+    - name: Deploy phpmyadmin
+      community.docker.docker_container:
+        name: phpmyadmin
+        image: phpmyadmin
+        networks:
+          - name: db_net
+        ports:
+          - "8080:80"
+        env:
+          PMA_HOST: db

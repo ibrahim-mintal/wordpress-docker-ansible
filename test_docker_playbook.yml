@@ -1,0 +1,12 @@
+---
+- name: test docker
+  hosts: debian
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: run hello world container
+      community.docker.docker_container:
+        name: hello-world #mandatory
+        image: hello-world
+        
+

@@ -1,0 +1,24 @@
+# Database
+db_name: db
+db_image: mysql:latest
+db_network: wordpress_network
+db_ports:
+  - "3306:3306"
+db_root_password: root
+db_database: wordpress
+db_user: wpuser
+db_password: wppass
+db_volume: db_data:/var/lib/mysql
+
+# phpMyAdmin
+pma_name: phpmyadmin
+pma_image: phpmyadmin:latest
+pma_ports:
+  - "8080:80"
+
+# WordPress
+wp_name: wordpress
+wp_image: wordpress:latest
+wp_ports:
+  - "8081:80"
+wp_volume: wp_data:/var/www/html
